@@ -193,20 +193,7 @@ class user_roles_editable extends \core\output\inplace_editable {
             $rolestoprocess[$roleid] = $roleid;
         }
 
-        // Process adds.
-        foreach ($rolestoprocess as $roleid) {
-            if (!isset($userroles[$roleid])) {
-                // Add them.
-                $id = role_assign($roleid, $userid, $context);
-                // Keep this variable in sync.
-                $role = new \stdClass();
-                $role->id = $id;
-                $role->roleid = $roleid;
-                $role->contextid = $context->id;
-                $userroles[$role->roleid] = $role;
-            }
-        }
-
+        // MDL-69954 patch.
         // Process removals.
         foreach ($assignableroles as $roleid => $rolename) {
             if (isset($userroles[$roleid]) && !isset($rolestoprocess[$roleid])) {
@@ -237,6 +224,21 @@ class user_roles_editable extends \core\output\inplace_editable {
                 }
             }
         }
+
+        // Process adds.
+        foreach ($rolestoprocess as $roleid) {
+            if (!isset($userroles[$roleid])) {
+                // Add them.
+                $id = role_assign($roleid, $userid, $context);
+                // Keep this variable in sync.
+                $role = new \stdClass();
+                $role->id = $id;
+                $role->roleid = $roleid;
+                $role->contextid = $context->id;
+                $userroles[$role->roleid] = $role;
+            }
+        }
+        // End MDL-69954 patch.
 
         $course = get_course($courseid);
         $user = core_user::get_user($userid);
