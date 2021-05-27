@@ -120,7 +120,9 @@ if ($options['unset'] || $options['set'] !== null) {
     }
 
     // Check that the variable is not hard-set in the main config.php already.
-    if (array_key_exists($options['name'], $CFG->config_php_settings)) {
+    if ((empty($options['component']) && array_key_exists($options['name'], $CFG->config_php_settings))
+        || (!empty($options['component']) && array_key_exists($options['component'], $CFG->forced_plugin_settings)
+            && array_key_exists($options['name'], $CFG->forced_plugin_settings[$options['component']]))) {
         cli_error('The configuration variable is hard-set in the config.php, unable to change.', 4);
     }
 
