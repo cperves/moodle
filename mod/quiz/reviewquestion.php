@@ -121,5 +121,6 @@ if ($timestamp) {
     );
 }
 
+$attemptobj->get_html_head_contributions($PAGE, true);
 echo $output->review_question_page($attemptobj, $slot, $seq,
         $attemptobj->get_display_options(true), $summarydata);
